@@ -1,0 +1,78 @@
+{% extends "AppCompras/plantillas/index.html" %}
+{% load static %}
+{% load urlize %}
+{% block title %} Home {% endblock %}
+{% block contnent %}
+
+{{nombre}}
+<a href="{% url 'add_user' nombre %}">añadir usuario</a>
+{% for item in lista %}
+<div class="container card" style="margin:5px auto;">
+    <div class="row">
+{% autoescape off %}
+
+        <span class="col-10">{{ item.nombre|urlize }}  {% if item.cantidad %}{{ item.cantidad }}{% endif %}</span>
+    {% endautoescape %}
+    <a href="{% url 'delete_item' nombre item.id %}" class="col-1 btn btn-primary"><i class="bi bi-trash3"></i></a>
+                    <button type="button" class="col-1 btn btn-primary editar-vendedor" data-bs-toggle="modal" data-bs-target="#exampleModal" data-vendedor-id="{{item.id}}">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+        </div>
+ </div>
+{% endfor %}
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="NuevoElementoModal">
+  Crear nuevo elemento
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="exampleModalLabel"></h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post"  action="">
+    {% csrf_token %}
+    <span id="modalContenido"></span>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('NuevoElementoModal').addEventListener('click', function() {
+    document.querySelector('#exampleModal form').action = "{% url 'nuevo_elemento' nombre%}";
+
+    fetch('/{{nombre}}/nuevo_elemento/')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('exampleModalLabel').innerHTML = "Crear nuevo elemento";
+            document.getElementById('modalContenido').innerHTML = data.form;
+        });
+});
+
+</script>
+<script>
+document.querySelectorAll('.editar-vendedor').forEach(function(button) {
+    button.addEventListener('click', function() {
+        var vendedorId = this.getAttribute('data-vendedor-id');
+        document.querySelector('#exampleModal form').action = "/{{nombre}}/editar_elemento/" + vendedorId + "/";
+        fetch('/{{nombre}}/editar_elemento/' + vendedorId + '/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('exampleModalLabel').innerHTML = "Editar elemento";
+                document.getElementById('modalContenido').innerHTML = data.form;
+            });
+    });
+});
+</script>
+{% endblock %}

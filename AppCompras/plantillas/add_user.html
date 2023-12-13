@@ -1,0 +1,12 @@
+{% extends "AppCompras/plantillas/index.html" %}
+{% load static %}
+{% block title %} Home {% endblock %}
+{% block contnent %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Añadir usuario</button>
+</form>
+
+{% endblock %}

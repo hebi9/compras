@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script>
+    function comenzar(){
+    inputs = document.getElementsByTagName("input");
+    for(var i = 1; i < inputs.length; i++){
+        inputs[i].classList.add("col-10", "inputs");
+    }
+    }
+    window.addEventListener("load", comenzar, false);
+</script>
+</head>
+<body>
+<section class=" ">
+    <div class="container d-flex text-center justify-content-center align-items-center">
+        <div class="container   justify-content-center align-items-center">
+            <div class="row d-flex  justify-content-center align-items-center">
+            <div class="card col-10 d-flex  justify-content-center align-items-center" >
+                <h3>Inicio de sesión</h3>
+            </div>
+</div>
+            <div class="row d-flex  justify-content-center align-items-center">
+        <div class="card col-8 d-flex  justify-content-center align-items-center margen" >
+        <form method="post" action="" class="row col-12 justify-content-center" >
+            <div class=" text-center" >
+            {% csrf_token %}
+
+                {% if messages %}
+                    {% for mensaje in messages %}
+                        <br/>
+                        <span class="alert alert-{{mensaje.tags}}">{{mensaje}}</span>
+                        <br/><br/>
+                    {% endfor %}
+                {% endif %}
+                <div class="formulario">
+                {{form}}
+            </div>
+            </div>
+                <button type="submit" class="btn btn-success col-8" >Entrar</button>
+
+
+        </form>
+            </div>
+                </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
